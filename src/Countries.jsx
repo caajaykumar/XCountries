@@ -31,6 +31,8 @@ const Card = ({name, flag, abbr}) => {
 
 export default function Countries() {
    const ENDPOINT = "https://xcountries-backend.azurewebsites.net/all";
+   const [loading, setLoading] = useState(true);
+
    const [apiData, setApiData] = useState([]);
 
 
@@ -39,9 +41,11 @@ export default function Countries() {
         .then((response) => response.json())
         .then((data) => {
           setApiData(data);
+          setLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
+          setLoading(false);
         });
 }, [])
 
@@ -62,11 +66,15 @@ export default function Countries() {
         
            >
 
-           {
-                apiData.map(({name, flag, abbr}) =>(
-                    <Card  key={abbr} name ={name} flag={flag} />
-                ))
-            }
+{loading ? (
+  <p>Loading countries...</p>
+) : (
+  <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", textAlign: "center", gap: "10px" }}>
+    {apiData.map(({ name, flag, abbr }) => (
+      <Card key={abbr} name={name} flag={flag} />
+    ))}
+  </div>
+)}
            </div>
           
 
